@@ -1,0 +1,629 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HAUZ STORE</title>
+<style>
+:root{
+ --bg:#080b14;
+ --surface:#101626;
+ --surface2:#151e31;
+ --border:#26334c;
+ --purple:#9565ff;
+ --cyan:#35d9e6;
+ --green:#36d6a0;
+ --red:#ff5576;
+ --text:#f4f6ff;
+ --muted:#8996b2;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:Inter,Arial,sans-serif;
+}
+button,input,select{font:inherit}
+button{
+ border:0;border-radius:11px;padding:12px 16px;
+ background:var(--purple);color:white;font-weight:700;
+ cursor:pointer;transition:.2s;
+}
+button:hover{filter:brightness(1.13);transform:translateY(-1px)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.secondary{background:#263149}
+.danger{background:#a52c4b}
+.green{background:#137c60}
+input,select{
+ width:100%;padding:13px 14px;background:#0a1020;
+ border:1px solid var(--border);border-radius:11px;
+ color:white;outline:none;
+}
+input:focus,select:focus{border-color:var(--purple)}
+label{display:block;color:var(--muted);font-size:13px;margin:15px 0 7px}
+h1,h2,h3,p{margin-top:0}
+small,.muted{color:var(--muted)}
+.topbar{
+ height:70px;position:sticky;top:0;z-index:10;
+ display:flex;align-items:center;justify-content:space-between;
+ padding:0 25px;background:#0d1321ee;
+ border-bottom:1px solid var(--border);backdrop-filter:blur(15px);
+}
+.logo{font-weight:950;font-size:23px;letter-spacing:2px;color:#b69aff}
+.logo span{color:var(--cyan)}
+.topright{display:flex;align-items:center;gap:15px}
+#clock{font-size:13px;color:var(--muted)}
+.wrap{max-width:1450px;margin:auto;padding:24px}
+.layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:22px}
+.sidebar{
+ height:max-content;position:sticky;top:92px;
+ background:var(--surface);border:1px solid var(--border);
+ border-radius:18px;padding:15px;
+}
+.side-title{font-size:11px;color:var(--muted);letter-spacing:2px;padding:12px 10px}
+.nav{
+ width:100%;display:flex;align-items:center;gap:12px;
+ background:transparent;color:#aab5ce;text-align:left;
+ margin:4px 0;padding:13px;border-radius:11px;
+}
+.nav.active{background:linear-gradient(100deg,#5836a6,#263a64);color:white}
+.nav .ico{width:23px;text-align:center;font-size:17px}
+.main{min-width:0}
+.section{display:none}
+.section.active{display:block}
+.heading{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:12px;margin-bottom:20px;flex-wrap:wrap;
+}
+.heading h1{font-size:25px;margin:0}
+.heading p{color:var(--muted);font-size:13px;margin:6px 0 0}
+.panel,.card{
+ background:var(--surface);border:1px solid var(--border);
+ border-radius:17px;padding:20px;
+}
+.panel{margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.stat{position:relative;overflow:hidden}
+.stat:after{
+ content:"";position:absolute;width:100px;height:100px;
+ border-radius:50%;background:#9565ff18;right:-35px;top:-35px;
+}
+.stat small{font-size:12px}
+.stat strong{display:block;font-size:24px;margin-top:13px}
+.stat .stat-icon{font-size:21px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.row>*{flex:1;min-width:0}
+.row .fit{flex:0 0 auto}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 15px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.actions button{padding:8px 10px;font-size:12px}
+.tablebox{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:560px;font-size:13px}
+th,td{padding:13px 10px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600}
+.badge{display:inline-block;padding:5px 9px;border-radius:30px;background:#32264f;color:#c9adff;font-size:11px}
+.badge.green{background:#123b32;color:#65e7b8}
+.badge.red{background:#481e2b;color:#ff8da3}
+.room{
+ background:linear-gradient(145deg,#1a2340,#111827);
+ border:1px solid #354467;border-radius:16px;padding:19px;
+}
+.room h3{margin:0 0 9px}
+.room button{width:100%;margin-top:15px}
+.chest-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.chest-icon{font-size:34px;margin-bottom:14px}
+.chest-card{background:linear-gradient(145deg,#211b42,#111d32);border:1px solid #473a6b;border-radius:16px;padding:20px}
+.chest-card p{font-size:12px;color:var(--muted);min-height:32px}
+.chest-card button{width:100%}
+.timer{color:var(--cyan);font-size:12px;margin-top:10px}
+.hero{
+ padding:27px;border-radius:19px;
+ background:linear-gradient(115deg,#30205d,#172b4a 70%,#10313d);
+ border:1px solid #514078;margin-bottom:18px;
+}
+.hero h2{font-size:25px;margin-bottom:8px}
+.hero p{color:#c4c5e2;margin-bottom:0}
+.auth{max-width:440px;margin:9vh auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:27px}
+.auth .logo{text-align:center;font-size:29px;margin-bottom:25px}
+.notice{padding:13px;border-radius:12px;background:#282044;color:#d8caff;margin-bottom:15px;font-size:13px}
+.empty{text-align:center;padding:25px;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--border);margin:20px 0}
+#toast{
+ position:fixed;bottom:25px;left:50%;transform:translateX(-50%);
+ background:#202b42;border:1px solid #465675;padding:13px 19px;
+ border-radius:12px;display:none;z-index:30;max-width:90%;
+}
+.status-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.switch{min-width:95px}
+.mobile-bottom{display:none}
+@media(max-width:900px){
+ .layout{grid-template-columns:1fr}
+ .sidebar{position:static;display:flex;overflow:auto;gap:5px;padding:8px}
+ .side-title{display:none}
+ .nav{width:auto;white-space:nowrap;margin:0;padding:11px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .chest-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .wrap{padding:13px;padding-bottom:90px}
+ .topbar{height:62px;padding:0 14px}
+ .logo{font-size:19px}
+ #clock{display:none}
+ .layout{gap:13px}
+ .sidebar{
+  position:fixed;bottom:0;left:0;right:0;z-index:15;
+  border-radius:15px 15px 0 0;border-bottom:0;
+  background:#111827f5;backdrop-filter:blur(15px);
+  padding:7px;justify-content:flex-start;
+ }
+ .nav{display:flex;flex-direction:column;gap:3px;font-size:10px;padding:8px;min-width:66px;text-align:center}
+ .nav .ico{font-size:18px}
+ .grid{gap:9px}
+ .card,.panel{padding:15px}
+ .stat strong{font-size:19px}
+ .heading h1{font-size:21px}
+ .form-grid{grid-template-columns:1fr}
+ .hero{padding:20px}
+ .hero h2{font-size:21px}
+ .topright button{padding:9px 10px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+ <div class="logo">HAUZ <span>STORE</span></div>
+ <div class="topright">
+  <small id="clock"></small>
+  <button class="secondary" id="logoutBtn" onclick="logout()" style="display:none">Đăng xuất</button>
+ </div>
+</header>
+
+<div id="authView" class="wrap">
+ <div class="auth">
+  <div class="logo">HAUZ <span>STORE</span></div>
+  <div id="setupBox" style="display:none">
+   <div class="notice">Tạo tài khoản Admin lần đầu trên trình duyệt này. Đây là bản demo.</div>
+   <label>Tên đăng nhập Admin</label>
+   <input id="setupName" value="Haune">
+   <label>Mật khẩu Admin</label>
+   <input id="setupPass" type="password" placeholder="Tối thiểu 8 ký tự">
+   <button style="width:100%;margin-top:18px" onclick="setupAdmin()">Tạo Admin</button>
+  </div>
+  <div id="loginBox">
+   <h2>Đăng nhập</h2>
+   <p class="muted">Đăng nhập vào hệ thống HAUZ STORE.</p>
+   <label>Tên tài khoản</label><input id="loginName" placeholder="Nhập tài khoản">
+   <label>Mật khẩu</label><input id="loginPass" type="password" placeholder="Nhập mật khẩu">
+   <button style="width:100%;margin-top:18px" onclick="login()">Đăng nhập</button>
+   <hr>
+   <button class="secondary" style="width:100%" onclick="showRegister()">Đăng ký Member</button>
+  </div>
+  <div id="registerBox" style="display:none">
+   <h2>Tạo tài khoản</h2>
+   <label>Tên tài khoản</label><input id="regName">
+   <label>Mật khẩu</label><input id="regPass" type="password">
+   <button style="width:100%;margin-top:18px" onclick="register()">Đăng ký</button>
+   <button class="secondary" style="width:100%;margin-top:8px" onclick="showLogin()">Quay lại</button>
+  </div>
+ </div>
+</div>
+
+<div id="appView" class="wrap" style="display:none">
+ <div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main">
+   <div id="maintenanceBanner" class="notice" style="display:none">⚠️ Hệ thống LIVE đang bảo trì.</div>
+
+   <section id="dashboard" class="section active">
+    <div class="hero">
+     <h2 id="welcome">Xin chào!</h2>
+     <p>Chào mừng đến với HAUZ STORE. Quản lý mọi thứ tại một nơi.</p>
+    </div>
+    <div class="heading"><div><h1>Tổng quan</h1><p>Thông tin tài khoản và hệ thống</p></div></div>
+    <div class="grid" id="stats"></div>
+    <div class="panel"><h3>Thông báo hệ thống</h3><p id="systemInfo" class="muted"></p></div>
+   </section>
+
+   <section id="live" class="section">
+    <div class="heading"><div><h1>🔴 LIVE XU</h1><p>Các phòng LIVE mô phỏng trong HAUZ STORE.</p></div><button onclick="refreshLives()">Cập nhật</button></div>
+    <div class="grid" id="liveRooms" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div>
+   </section>
+
+   <section id="chests" class="section">
+    <div class="heading"><div><h1>Kho báu</h1><p>Chọn rương để nhận xu mô phỏng.</p></div></div>
+    <div class="chest-grid" id="chestGrid"></div>
+   </section>
+
+   <section id="wallet" class="section">
+    <div class="heading"><div><h1>Ví xu</h1><p>Thông tin xu và lịch sử nhận thưởng.</p></div></div>
+    <div class="hero"><small>SỐ DƯ HIỆN TẠI</small><h2 id="myCoins">0 xu</h2></div>
+    <div class="panel"><h3>Lịch sử nhận xu</h3><div id="myChestHistory"></div></div>
+   </section>
+
+   <section id="keys" class="section">
+    <div class="heading"><div><h1>Quản lý KEY</h1><p>Tạo và theo dõi kho KEY LIVE.</p></div></div>
+    <div class="panel">
+     <div class="form-grid">
+      <div><label>Tiền tố KEY</label><input id="keyPrefix" value="HAUNE"></div>
+      <div><label>Thời hạn</label><select id="keyDuration"><option value="30">30 phút</option><option value="60">1 giờ</option><option value="1440">1 ngày</option><option value="43200">1 tháng</option></select></div>
+      <div><label>Số lượng KEY</label><input id="keyCount" type="number" min="1" max="100" value="1"></div>
+      <div><label>Ghi chú / Người nhận</label><input id="keyNote" placeholder="Tên người nhận"></div>
+     </div>
+     <button style="margin-top:18px" onclick="createKeys()">＋ Tạo KEY</button>
+    </div>
+    <div class="panel"><h3>Danh sách KEY</h3><div class="tablebox"><table><thead><tr><th>KEY</th><th>Thời hạn</th><th>Người tạo</th><th>Ghi chú</th><th>Trạng thái</th><th></th></tr></thead><tbody id="keyTable"></tbody></table></div></div>
+   </section>
+
+   <section id="ctv" class="section">
+    <div class="heading"><div><h1>Quản lý CTV</h1><p>Tạo và quản lý cộng tác viên.</p></div></div>
+    <div class="panel">
+     <div class="form-grid">
+      <div><label>Tên CTV</label><input id="ctvName"></div>
+      <div><label>Mật khẩu</label><input id="ctvPass" type="password"></div>
+     </div>
+     <label>Số dư khởi tạo (đ)</label><input id="ctvBalance" type="number" value="0">
+     <button style="margin-top:15px" onclick="createCTV()">＋ Tạo tài khoản CTV</button>
+    </div>
+    <div class="panel"><h3>Danh sách CTV</h3><div class="tablebox"><table><thead><tr><th>Tài khoản</th><th>Số dư</th><th>KEY đã tạo</th><th>Trạng thái</th><th></th></tr></thead><tbody id="ctvTable"></tbody></table></div></div>
+   </section>
+
+   <section id="deposits" class="section">
+    <div class="heading"><div><h1>Nạp tiền CTV</h1><p>Quản lý yêu cầu nạp tiền demo.</p></div></div>
+    <div class="notice">Đây là bản demo, chưa kết nối ngân hàng. Chỉ duyệt khi đã xác minh giao dịch thực tế.</div>
+    <div class="panel">
+     <label>CTV nạp tiền</label><select id="depositUser"></select>
+     <label>Số tiền (đ)</label><input id="depositAmount" type="number" min="1000" value="10000">
+     <button style="margin-top:15px" onclick="makeDeposit()">Tạo yêu cầu nạp</button>
+    </div>
+    <div class="panel"><h3>Lịch sử nạp</h3><div class="tablebox"><table><thead><tr><th>CTV</th><th>Mã giao dịch</th><th>Số tiền</th><th>Trạng thái</th><th></th></tr></thead><tbody id="depositTable"></tbody></table></div></div>
+   </section>
+
+   <section id="leaderboard" class="section">
+    <div class="heading"><div><h1>Bảng xếp hạng</h1><p>Thống kê số KEY đã tạo của CTV.</p></div></div>
+    <div class="panel"><div id="leaderTable"></div></div>
+   </section>
+
+   <section id="logs" class="section">
+    <div class="heading"><div><h1>Nhật ký hệ thống</h1><p>Lịch sử hoạt động trên trình duyệt.</p></div></div>
+    <div class="panel"><div class="tablebox"><table><thead><tr><th>Tài khoản</th><th>Hoạt động</th><th>Thiết bị</th><th>Thời gian</th><th>Chi tiết</th></tr></thead><tbody id="logTable"></tbody></table></div></div>
+   </section>
+
+   <section id="members" class="section">
+    <div class="heading"><div><h1>Quản lý Member</h1><p>Danh sách thành viên hệ thống.</p></div></div>
+    <div class="panel"><div class="tablebox"><table><thead><tr><th>Tài khoản</th><th>Xu</th><th>Trạng thái</th><th></th></tr></thead><tbody id="memberTable"></tbody></table></div></div>
+   </section>
+
+   <section id="settings" class="section">
+    <div class="heading"><div><h1>Cài đặt</h1><p>Thiết lập giá KEY và hoạt động hệ thống.</p></div></div>
+    <div class="panel">
+     <h3>Giá KEY</h3>
+     <div class="form-grid">
+      <div><label>KEY 30 phút (đ)</label><input id="price30" type="number"></div>
+      <div><label>KEY 1 giờ (đ)</label><input id="price60" type="number"></div>
+      <div><label>KEY 1 ngày (đ)</label><input id="price1440" type="number"></div>
+      <div><label>KEY 1 tháng (đ)</label><input id="price43200" type="number"></div>
+     </div>
+     <label>Thời gian chờ Rương Treo (giây)</label><input id="hangWait" type="number">
+     <button style="margin-top:17px" onclick="saveSettings()">Lưu cài đặt</button>
+    </div>
+    <div class="panel">
+     <h3>Quản lý LIVE</h3>
+     <div class="status-row"><div><b>Bảo trì LIVE</b><p class="muted">Tạm ngưng hoạt động khu LIVE.</p></div><button class="danger" onclick="toggleMaintenance()">Bật / Tắt</button></div>
+     <hr>
+     <div class="status-row"><div><b>Danh sách LIVE</b><p class="muted">Hiển thị hoặc ẩn các phòng mô phỏng.</p></div><button class="secondary" onclick="toggleLive()">Bật / Tắt</button></div>
+    </div>
+    <div class="panel">
+     <h3>Quản lý rương</h3>
+     <p class="muted">Bật hoặc tắt từng loại rương riêng biệt.</p>
+     <div id="chestAdmin"></div>
+    </div>
+   </section>
+
+   <section id="profile" class="section">
+    <div class="heading"><div><h1>Tài khoản</h1><p>Thay đổi mật khẩu đăng nhập.</p></div></div>
+    <div class="panel">
+     <label>Mật khẩu hiện tại</label><input id="oldPass" type="password">
+     <label>Mật khẩu mới</label><input id="newPass" type="password">
+     <button style="margin-top:17px" onclick="changePassword()">Cập nhật mật khẩu</button>
+    </div>
+   </section>
+  </main>
+ </div>
+</div>
+<div id="toast"></div>
+
+<script>
+const DBKEY="HAUZ_STORE_DEMO_V1";
+let data=JSON.parse(localStorage.getItem(DBKEY)||"null");
+let current=null,timers={};
+const $=id=>document.getElementById(id);
+
+function fresh(){
+ return {
+  users:[],keys:[],logs:[],deposits:[],chests:[],
+  settings:{
+   price30:200,price60:500,price1440:10000,price43200:50000,
+   hangWait:60,maintenance:false,live:true,
+   chest_coin_enabled:true,chest_luck_enabled:true,chest_hang_enabled:true
+  },
+  rooms:["LIVE Xu 01","LIVE Xu 02","LIVE Xu 03","LIVE Xu 04","LIVE Xu 05","LIVE Xu 06"]
+ };
+}
+if(!data){data=fresh()}
+data.settings=data.settings||{};
+const defaults=fresh().settings;
+Object.keys(defaults).forEach(k=>{
+ if(data.settings[k]===undefined)data.settings[k]=defaults[k];
+});
+["users","keys","logs","deposits","chests","rooms"].forEach(k=>{
+ if(!Array.isArray(data[k]))data[k]=fresh()[k];
+});
+save();
+
+function save(){localStorage.setItem(DBKEY,JSON.stringify(data))}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function money(n){return Number(n||0).toLocaleString("vi-VN")+"đ"}
+function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",2400)}
+function uid(){return Math.random().toString(36).slice(2,8).toUpperCase()+Date.now().toString(36).slice(-4).toUpperCase()}
+function me(){return data.users.find(x=>x.id===current)}
+function log(action,detail=""){
+ data.logs.unshift({user:me()?.name||"Khách",action,device:navigator.userAgent.slice(0,90),time:new Date().toLocaleString("vi-VN"),detail});
+ data.logs=data.logs.slice(0,500);save();
+}
+function setupAdmin(){
+ let name=$("setupName").value.trim(),pass=$("setupPass").value;
+ if(name.length<3||pass.length<8)return toast("Tên tối thiểu 3 ký tự, mật khẩu tối thiểu 8 ký tự");
+ data.users.push({id:uid(),name,pass,role:"admin",balance:0,coins:0,banned:false});
+ save();$("setupBox").style.display="none";toast("Đã tạo Admin. Hãy đăng nhập.");
+}
+function showRegister(){$("loginBox").style.display="none";$("registerBox").style.display="block"}
+function showLogin(){$("registerBox").style.display="none";$("loginBox").style.display="block"}
+function register(){
+ let name=$("regName").value.trim(),pass=$("regPass").value;
+ if(name.length<3||pass.length<8)return toast("Tên tối thiểu 3 ký tự, mật khẩu tối thiểu 8 ký tự");
+ if(data.users.some(x=>x.name.toLowerCase()===name.toLowerCase()))return toast("Tên tài khoản đã tồn tại");
+ data.users.push({id:uid(),name,pass,role:"member",balance:0,coins:0,banned:false});
+ save();showLogin();toast("Đăng ký thành công");
+}
+function login(){
+ let name=$("loginName").value.trim(),pass=$("loginPass").value;
+ let u=data.users.find(x=>x.name.toLowerCase()===name.toLowerCase()&&x.pass===pass);
+ if(!u)return toast("Sai tài khoản hoặc mật khẩu");
+ if(u.banned)return toast("Tài khoản đã bị khóa");
+ current=u.id;log("Đăng nhập");openApp();
+}
+function logout(){
+ if(me())log("Đăng xuất");
+ current=null;$("authView").style.display="block";$("appView").style.display="none";$("logoutBtn").style.display="none";
+}
+function openApp(){
+ $("authView").style.display="none";$("appView").style.display="block";$("logoutBtn").style.display="block";
+ $("welcome").textContent="Xin chào, "+me().name;
+ buildNav();renderAll();
+}
+const navLabels={
+ dashboard:["⌂","Tổng quan"],profile:["♙","Tài khoản"],
+ live:["◉","LIVE XU"],chests:["♢","Kho báu"],wallet:["◈","Ví xu"],
+ keys:["⌘","Quản lý KEY"],ctv:["♧","Quản lý CTV"],
+ deposits:["＋","Nạp tiền"],leaderboard:["♜","Xếp hạng"],
+ logs:["≡","Nhật ký"],members:["♙","Member"],settings:["⚙","Cài đặt"]
+};
+function buildNav(){
+ let role=me().role;
+ let ids=["dashboard","profile"];
+ if(role==="member")ids.push("live","chests","wallet","leaderboard");
+ if(role==="ctv")ids.push("keys","live","leaderboard");
+ if(role==="admin")ids.push("keys","ctv","deposits","members","live","leaderboard","logs","settings");
+ $("sidebar").innerHTML=ids.map((id,i)=>`<button class="nav ${i===0?"active":""}" onclick="go('${id}',this)"><span class="ico">${navLabels[id][0]}</span>${navLabels[id][1]}</button>`).join("");
+}
+function go(id,btn){
+ document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+ $(id).classList.add("active");
+ document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));
+ if(btn)btn.classList.add("active");
+ renderAll();
+}
+function renderAll(){
+ let u=me();if(!u)return;
+ $("maintenanceBanner").style.display=data.settings.maintenance?"block":"none";
+ let stats=[["Tài khoản",u.name,"♙"],["Vai trò",u.role.toUpperCase(),"✦"],["Số dư",money(u.balance),"◈"],["Xu",u.coins+" xu","✧"]];
+ $("stats").innerHTML=stats.map(x=>`<div class="card stat"><span class="stat-icon">${x[2]}</span><small>${x[0]}</small><strong>${esc(x[1])}</strong></div>`).join("");
+ $("systemInfo").textContent=data.settings.maintenance?"LIVE đang bảo trì.":"Hệ thống đang hoạt động.";
+ renderKeys();renderCTV();renderDeposits();renderLogs();renderMembers();renderLeader();renderLives();renderChests();renderWallet();loadSettings();renderChestAdmin();
+}
+function durationText(n){return ({30:"30 phút",60:"1 giờ",1440:"1 ngày",43200:"1 tháng"})[n]||n+" phút"}
+function price(n){return Number(data.settings["price"+n]||0)}
+function createKeys(){
+ let u=me(),prefix=$("keyPrefix").value.trim().replace(/[^a-zA-Z0-9_-]/g,"").toUpperCase();
+ let count=Math.min(100,Math.max(1,Number($("keyCount").value)||1)),duration=Number($("keyDuration").value);
+ if(!prefix)return toast("Nhập tiền tố KEY");
+ let cost=price(duration)*count;
+ if(u.role==="ctv"&&u.balance<cost)return toast("Số dư CTV không đủ: cần "+money(cost));
+ if(u.role==="ctv")u.balance-=cost;
+ for(let i=0;i<count;i++){
+  data.keys.unshift({id:uid(),code:prefix+"-"+uid()+"-"+uid(),duration,creator:u.role==="admin"?"ADMIN":u.name,note:$("keyNote").value.trim(),status:"Chưa sử dụng",owner:null,created:new Date().toLocaleString("vi-VN"),expires:0});
+ }
+ log("Tạo KEY",count+" KEY, "+durationText(duration));save();renderAll();toast("Đã tạo "+count+" KEY");
+}
+function renderKeys(){
+ if(!$("keyTable"))return;
+ $("keyTable").innerHTML=data.keys.map(k=>`<tr><td><b>${esc(k.code)}</b></td><td>${durationText(k.duration)}</td><td>${esc(k.creator)}</td><td>${esc(k.note)}</td><td><span class="badge ${k.status==="Đang sử dụng"?"green":k.status==="Đã hết hạn"?"red":""}">${esc(k.status)}</span></td><td><div class="actions"><button onclick="copyKey('${k.id}')">Copy</button>${me().role==="admin"?`<button class="danger" onclick="deleteKey('${k.id}')">Xóa</button>`:""}</div></td></tr>`).join("")||`<tr><td colspan="6">Chưa có KEY</td></tr>`;
+}
+function copyKey(id){
+ let k=data.keys.find(x=>x.id===id);if(!k)return;
+ if(navigator.clipboard?.writeText)navigator.clipboard.writeText(k.code).then(()=>toast("Đã copy KEY")).catch(()=>toast("Không thể copy tự động"));
+ else toast("Trình duyệt không hỗ trợ copy");
+}
+function deleteKey(id){if(!confirm("Xóa KEY này?"))return;data.keys=data.keys.filter(x=>x.id!==id);save();renderAll()}
+function createCTV(){
+ let name=$("ctvName").value.trim(),pass=$("ctvPass").value,balance=Number($("ctvBalance").value)||0;
+ if(name.length<3||pass.length<8)return toast("Tên hoặc mật khẩu chưa hợp lệ");
+ if(balance<0||data.users.some(x=>x.name.toLowerCase()===name.toLowerCase()))return toast("Tên đã tồn tại hoặc số dư không hợp lệ");
+ data.users.push({id:uid(),name,pass,role:"ctv",balance,coins:0,banned:false});
+ save();log("Tạo CTV",name);renderAll();toast("Đã tạo CTV");
+}
+function renderCTV(){
+ if(!$("ctvTable"))return;
+ $("ctvTable").innerHTML=data.users.filter(x=>x.role==="ctv").map(x=>`<tr><td>${esc(x.name)}</td><td>${money(x.balance)}</td><td>${data.keys.filter(k=>k.creator===x.name).length}</td><td>${x.banned?"Bị khóa":"Hoạt động"}</td><td><div class="actions"><button class="secondary" onclick="toggleBan('${x.id}')">${x.banned?"Mở khóa":"Khóa"}</button><button class="danger" onclick="deleteUser('${x.id}')">Xóa</button></div></td></tr>`).join("")||`<tr><td colspan="5">Chưa có CTV</td></tr>`;
+}
+function toggleBan(id){let u=data.users.find(x=>x.id===id);if(u){u.banned=!u.banned;save();renderAll()}}
+function deleteUser(id){if(!confirm("Xóa tài khoản này?"))return;data.users=data.users.filter(x=>x.id!==id);save();renderAll()}
+function makeDeposit(){
+ let id=$("depositUser").value,amount=Number($("depositAmount").value);
+ if(!id||amount<1000)return toast("Kiểm tra số tiền");
+ data.deposits.unshift({id:uid(),user:id,amount,status:"Chờ duyệt",created:new Date().toLocaleString("vi-VN")});
+ save();log("Tạo yêu cầu nạp",money(amount));renderAll();toast("Đã tạo yêu cầu");
+}
+function approveDeposit(id){
+ let d=data.deposits.find(x=>x.id===id);if(!d||d.status!=="Chờ duyệt")return;
+ let u=data.users.find(x=>x.id===d.user);if(!u)return;
+ u.balance+=d.amount;d.status="Đã duyệt";log("Duyệt nạp CTV",u.name+" "+money(d.amount));save();renderAll();
+}
+function renderDeposits(){
+ if(!$("depositTable"))return;
+ $("depositUser").innerHTML=data.users.filter(x=>x.role==="ctv").map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join("");
+ $("depositTable").innerHTML=data.deposits.map(d=>`<tr><td>${esc(data.users.find(x=>x.id===d.user)?.name||"Đã xóa")}</td><td>${d.id}</td><td>${money(d.amount)}</td><td>${d.status}</td><td>${d.status==="Chờ duyệt"?`<button class="green" onclick="approveDeposit('${d.id}')">Duyệt</button>`:"—"}</td></tr>`).join("")||`<tr><td colspan="5">Chưa có giao dịch</td></tr>`;
+}
+function renderMembers(){
+ if(!$("memberTable"))return;
+ $("memberTable").innerHTML=data.users.filter(x=>x.role==="member").map(x=>`<tr><td>${esc(x.name)}</td><td>${x.coins}</td><td>${x.banned?"Bị khóa":"Hoạt động"}</td><td><button class="danger" onclick="toggleBan('${x.id}')">${x.banned?"Mở khóa":"Ban"}</button></td></tr>`).join("")||`<tr><td colspan="4">Chưa có Member</td></tr>`;
+}
+function renderLogs(){
+ if(!$("logTable"))return;
+ $("logTable").innerHTML=data.logs.slice(0,150).map(x=>`<tr><td>${esc(x.user)}</td><td>${esc(x.action)}</td><td>${esc(x.device)}</td><td>${esc(x.time)}</td><td>${esc(x.detail)}</td></tr>`).join("");
+}
+function renderLeader(){
+ if(!$("leaderTable"))return;
+ let list=data.users.filter(x=>x.role==="ctv").map(x=>({name:x.name,sales:data.keys.filter(k=>k.creator===x.name).length})).sort((a,b)=>b.sales-a.sales);
+ $("leaderTable").innerHTML=list.map((x,i)=>`<div class="row" style="padding:14px;border-bottom:1px solid var(--border)"><b style="flex:0 0 40px">#${i+1}</b><span>${esc(x.name)}</span><b>${x.sales} KEY</b></div>`).join("")||"Chưa có CTV";
+}
+function refreshLives(){log("Cập nhật LIVE mô phỏng");renderLives();toast("Đã cập nhật danh sách LIVE")}
+function renderLives(){
+ if(!$("liveRooms"))return;
+ if(!data.settings.live){$("liveRooms").innerHTML='<div class="empty">Bot LIVE đang tắt.</div>';return}
+ $("liveRooms").innerHTML=data.rooms.map((r,i)=>`<div class="room"><h3>🔴 ${esc(r)}</h3><small>${100+i*47} người đang xem · Phòng mô phỏng</small><button onclick="enterLive(${i})">Vào LIVE</button></div>`).join("");
+}
+function enterLive(i){
+ if(data.settings.maintenance)return toast("LIVE đang bảo trì");
+ let u=me();
+ if(u.role==="member"){
+  let key=prompt("Nhập KEY LIVE để vào:");
+  if(!key)return;
+  let k=data.keys.find(x=>x.code===key.trim());
+  if(!k)return toast("KEY không hợp lệ");
+  if(k.status==="Đã hết hạn")return toast("KEY đã hết hạn");
+  if(k.owner&&k.owner!==u.id)return toast("KEY đã được tài khoản khác sử dụng");
+  if(k.status==="Chưa sử dụng"){
+   k.status="Đang sử dụng";k.owner=u.id;k.activated=Date.now();k.expires=Date.now()+k.duration*60000;
+  }
+  if(k.expires<Date.now()){k.status="Đã hết hạn";save();return toast("KEY đã hết hạn")}
+  log("Nhập KEY thành công",k.code);save();
+ }else log("Vào LIVE mô phỏng",data.rooms[i]);
+ showLiveRoom(i);
+}
+function showLiveRoom(i){
+ let room=data.rooms[i];
+ $("live").innerHTML=`<div class="panel"><h2>🔴 ${esc(room)}</h2><p class="muted">Đây là phòng LIVE mô phỏng nội bộ.</p><div class="notice">Bạn đang ở trong phòng LIVE. Chọn loại rương để tham gia.</div><button onclick="restoreLiveSection();go('chests')">Đến khu vực rương</button> <button class="secondary" onclick="restoreLiveSection();go('live')">Quay lại</button></div>`;
+ document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+ $("live").classList.add("active");
+}
+function restoreLiveSection(){
+ $("live").innerHTML='<div class="heading"><div><h1>🔴 LIVE XU</h1><p>Các phòng LIVE mô phỏng trong HAUZ STORE.</p></div><button onclick="refreshLives()">Cập nhật</button></div><div class="grid" id="liveRooms" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div>';
+ renderLives();
+}
+function renderChests(){
+ if(!$("chestGrid"))return;
+ let items=[
+  ["coin","🧰","Rương Xu","Chờ 10 giây · Nhận 1–1.000 xu"],
+  ["luck","🎁","Rương Nhân Phẩm","Có thể nhận xu hoặc rương rỗng"],
+  ["hang","🏆","Rương Treo","Chờ "+data.settings.hangWait+" giây để mở"]
+ ];
+ $("chestGrid").innerHTML=items.map(x=>{
+  let enabled=data.settings["chest_"+x[0]+"_enabled"];
+  return `<div class="chest-card"><div class="chest-icon">${x[1]}</div><h3>${x[2]}</h3><p>${x[3]}</p><span class="badge ${enabled?"green":"red"}">${enabled?"Đang bật":"Đang tắt"}</span><button ${enabled?"":"disabled"} onclick="openChest('${x[0]}')">${enabled?"Mở rương":"Rương đang tắt"}</button><div id="timer-${x[0]}" class="timer"></div></div>`;
+ }).join("");
+}
+function openChest(type){
+ let u=me();if(u.role!=="member")return toast("Chỉ Member được mở rương");
+ if(data.settings.maintenance)return toast("Đang bảo trì");
+ if(!data.settings["chest_"+type+"_enabled"])return toast("Rương đang tắt");
+ if(timers[type])return toast("Rương đang đếm thời gian");
+ let wait=type==="hang"?Math.max(1,Number(data.settings.hangWait)||60):10;
+ let end=Date.now()+wait*1000;
+ timers[type]=setInterval(()=>{
+  let left=Math.ceil((end-Date.now())/1000),el=$("timer-"+type);
+  if(el)el.textContent=left>0?"Còn "+left+" giây":"Đang mở rương...";
+  if(left<=0){clearInterval(timers[type]);delete timers[type];finishChest(type)}
+ },250);
+}
+function finishChest(type){
+ let u=me();if(!u)return;
+ let reward=0,empty=false;
+ if(type==="coin")reward=Math.floor(Math.random()*1000)+1;
+ if(type==="hang")reward=Math.floor(Math.random()*1000)+1;
+ if(type==="luck"){
+  let viewers=100+Math.floor(Math.random()*1000);
+  let participants=data.users.filter(x=>x.role==="member").length;
+  let chance=Math.max(10,75-Math.floor(viewers/50)-participants*2);
+  empty=Math.random()*100>=chance;
+  reward=empty?0:Math.floor(Math.random()*4000)+1;
+ }
+ u.coins=(u.coins||0)+reward;
+ data.chests.unshift({user:u.id,type,reward,empty,time:new Date().toLocaleString("vi-VN")});
+ log("Mở "+type,reward?("+"+reward+" xu"):"Rương rỗng");
+ save();renderAll();toast(empty?"Rương rỗng!":"Bạn nhận được "+reward+" xu!");
+}
+function renderWallet(){
+ if(!$("myCoins"))return;
+ $("myCoins").textContent=me().coins+" xu";
+ $("myChestHistory").innerHTML=data.chests.filter(x=>x.user===me().id).slice(0,30).map(x=>`<div class="row" style="padding:12px;border-bottom:1px solid var(--border)"><span>${x.type==="coin"?"Rương Xu":x.type==="luck"?"Rương Nhân Phẩm":"Rương Treo"}</span><b>${x.reward?"+"+x.reward+" xu":"Rỗng"}</b><small>${esc(x.time)}</small></div>`).join("")||"Chưa có lịch sử";
+}
+function loadSettings(){
+ $("price30").value=data.settings.price30;$("price60").value=data.settings.price60;
+ $("price1440").value=data.settings.price1440;$("price43200").value=data.settings.price43200;
+ $("hangWait").value=data.settings.hangWait;
+}
+function saveSettings(){
+ for(let x of ["price30","price60","price1440","price43200","hangWait"]){
+  let n=Number($(x).value);if(!Number.isFinite(n)||n<1)return toast("Giá trị không hợp lệ");
+ }
+ data.settings.price30=Number($("price30").value);
+ data.settings.price60=Number($("price60").value);
+ data.settings.price1440=Number($("price1440").value);
+ data.settings.price43200=Number($("price43200").value);
+ data.settings.hangWait=Number($("hangWait").value);
+ save();renderAll();toast("Đã lưu cài đặt");
+}
+function toggleMaintenance(){data.settings.maintenance=!data.settings.maintenance;save();renderAll();toast("Đã đổi trạng thái bảo trì")}
+function toggleLive(){data.settings.live=!data.settings.live;save();renderAll();toast("Đã đổi trạng thái LIVE")}
+function renderChestAdmin(){
+ if(!$("chestAdmin"))return;
+ let items=[["coin","🧰","Rương Xu"],["luck","🎁","Rương Nhân Phẩm"],["hang","🏆","Rương Treo"]];
+ $("chestAdmin").innerHTML=items.map(([type,icon,name])=>{
+  let enabled=data.settings["chest_"+type+"_enabled"];
+  return `<div class="status-row" style="padding:14px 0;border-bottom:1px solid var(--border)"><div><b>${icon} ${name}</b><p class="muted">${enabled?"Đang hoạt động":"Đang tạm tắt"}</p></div><button class="${enabled?"danger":"green"} switch" onclick="toggleChest('${type}')">${enabled?"Tắt rương":"Bật rương"}</button></div>`;
+ }).join("");
+}
+function toggleChest(type){
+ if(!me()||me().role!=="admin")return toast("Chỉ Admin mới được sử dụng");
+ let key="chest_"+type+"_enabled";
+ if(data.settings[key]===undefined)data.settings[key]=true;
+ data.settings[key]=!data.settings[key];
+ save();renderAll();toast(data.settings[key]?"Đã bật rương":"Đã tắt rương");
+}
+function changePassword(){
+ let u=me();
+ if($("oldPass").value!==u.pass)return toast("Mật khẩu hiện tại không đúng");
+ if($("newPass").value.length<8)return toast("Mật khẩu mới tối thiểu 8 ký tự");
+ u.pass=$("newPass").value;$("oldPass").value="";$("newPass").value="";
+ save();log("Đổi mật khẩu");toast("Đổi mật khẩu thành công");
+}
+function clock(){$("clock").textContent=new Date().toLocaleTimeString("vi-VN")}
+setInterval(clock,1000);clock();
+if(!data.users.some(x=>x.role==="admin")){
+ $("setupBox").style.display="block";$("loginBox").style.display="none";
+}
+</script>
+</body>
+</html>
